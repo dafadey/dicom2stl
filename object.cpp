@@ -180,8 +180,11 @@ void object::save_surface() {
   for (const auto& pt : levels[2])
     ini << " (" << pt[0] << ", " << pt[1] << ')';
   ini << '\n'; 
-  if(mask)
+  if(mask) {
+    if(mask_cropped)
+      embed(*mask_cropped, *mask);
     ini << "mask = " << mask->toBase64() << "\n";
+  }
   ini << '\n';
 }
 
