@@ -299,6 +299,8 @@ object* load_surface(const std::string& ini_name, std::vector<vgeo>& vgs) {
 
   ini.close();
   object* obj = new object(vg);
+  if(obj->mask)
+    delete obj->mask;
   obj->mask = mask;
   obj->mask->d = vg->d;
   obj->mask->o = vg->o;
