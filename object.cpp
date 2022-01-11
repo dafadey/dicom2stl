@@ -311,7 +311,7 @@ object* load_surface(const std::string& ini_name, std::vector<vgeo>& vgs) {
   return obj;
 }
 
-void object::draw_mask(float x0, float y0, float radius_x, float radius_y, const float* view_mat, const float* proj_mat) {
+void object::draw_mask(float x0, float y0, float radius_x, float radius_y, const float* view_mat, const float* proj_mat, bool erase) {
   timer tim("object::draw_mask time is ");
   /*
   v_k = vm_i,k  * v_i
@@ -345,7 +345,7 @@ void object::draw_mask(float x0, float y0, float radius_x, float radius_y, const
       const int base_addr = j * mask_cropped->dim[0] + k * mask_cropped->dim10;
       float* it = mask_cropped->data() + base_addr;
       for (int i = 0; i < mask_cropped->dim[0]; i++, it++) {
-        if(*it == .0f)
+        if(*it == erase ? .0f : 1.f)
           continue;
         const float x = mask_cropped->d[0] * static_cast<float>(i) - mask_cropped->o[0];
         const float xs = x * matrix[0] + y * matrix[4] + z * matrix[8] + matrix[12];
@@ -354,7 +354,7 @@ void object::draw_mask(float x0, float y0, float radius_x, float radius_y, const
         const float dist2 = SQR((xs - x0) * radius_x_1) + SQR((ys - y0) * radius_y_1);
         #undef SQR
         if(dist2 < 1.f) {
-          *it = 0.f;
+          *it = erase ? 0.f : 1.f;
           removed++;
         }
       }

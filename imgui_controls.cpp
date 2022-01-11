@@ -146,6 +146,9 @@ namespace ImGui {
       InputFloat("mask brush radius x", &(ren->mask_r_x));
       InputFloat("mask brush radius y", &(ren->mask_r_y));
     }
+    
+    Checkbox("mask brush erases", &(ren->mask_erases));
+    
     return modified;
   }
   

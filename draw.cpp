@@ -339,7 +339,7 @@ void renderer::render() {
 
   float cursor2d_pos_x = (mouse_pos[0] - win_geo[0] / 2) / static_cast<double>(win_geo[0]) * 2.f;
   float cursor2d_pos_y = (win_geo[1] / 2 - mouse_pos[1]) / static_cast<double>(win_geo[1]) * 2.f;
-  float VBOdata[8] { cursor2d_pos_x, cursor2d_pos_y, 1.f, .0f, .0f, 64.0, mask_r_x, mask_r_y / static_cast<GLfloat>(win_geo[1]) * static_cast<GLfloat>(win_geo[0])};
+  float VBOdata[8] { cursor2d_pos_x, cursor2d_pos_y, mask_erases ? 1.f : 0.f, mask_erases ? .0f : .7f, .0f, 64.0, mask_r_x, mask_r_y / static_cast<GLfloat>(win_geo[1]) * static_cast<GLfloat>(win_geo[0])};
   glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), VBOdata, GL_STATIC_DRAW);
   glVertexAttribPointer(cursor2d_pos_location, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
   glVertexAttribPointer(cursor2d_color_location, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
@@ -426,7 +426,7 @@ void renderer::draw_mask(double x, double y) {
   int win_geo[2];
   glfwGetWindowSize(win, win_geo, &win_geo[1]);
   for(auto& obj : *objects)
-    obj->draw_mask(static_cast<float>(x), static_cast<float>(y), mask_r_x, mask_r_y / static_cast<GLfloat>(win_geo[1]) * static_cast<GLfloat>(win_geo[0]), view_matrix.data(), proj_matrix.data());
+    obj->draw_mask(static_cast<float>(x), static_cast<float>(y), mask_r_x, mask_r_y / static_cast<GLfloat>(win_geo[1]) * static_cast<GLfloat>(win_geo[0]), view_matrix.data(), proj_matrix.data(), mask_erases);
 }
 
 void renderer::apply_mask() {

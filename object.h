@@ -22,7 +22,7 @@ struct object {
   void apply_mask();
   void update_model();
 
-  void draw_mask(float x, float y, float radius_x, float radius_y, const float* view_mat, const float* proj_mat);
+  void draw_mask(float x, float y, float radius_x, float radius_y, const float* view_mat, const float* proj_mat, bool erase);
   
   vgeo* source;
   vgeo* smoothed;

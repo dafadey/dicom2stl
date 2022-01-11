@@ -47,6 +47,7 @@ struct renderer {
  
   float mask_r_x{.1f};
   float mask_r_y{.1f};
+  bool mask_erases{true};
 
   GLFWwindow* win;
   
