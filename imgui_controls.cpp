@@ -140,7 +140,7 @@ namespace ImGui {
     static bool mask_symmetric = true;
     Checkbox("mask painter symmetric", &mask_symmetric);
     if (mask_symmetric) {
-      if(InputFloat("mask brush radius", &(ren->mask_r_x)))
+      if(DragFloat("mask brush radius", &(ren->mask_r_x), .01f, .01f, .3f, "%.3f", ImGuiSliderFlags_Logarithmic));
         ren->mask_r_y = ren->mask_r_x;
     } else {
       InputFloat("mask brush radius x", &(ren->mask_r_x));
