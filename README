@@ -1,0 +1,38 @@
+================Description===========
+
+dicom2stl is a tool for visualization of MRI images in DICOM format. MRI image is a responce field of hydrogen atoms in strong magnetic field which indicate tissue properites. MRI data is a series of slices forming a uniform grid of scalar data corresponding to certain tissue propeties.
+
+There are two common ways to visualize such data: cloud rendering and isosurface rendering.
+
+This software is designed to visualize isosurfaces and convert them to STL format. this can be usefull for 3D printing of living tissues.
+
+To help distinguish between target object and surrounding tissue a method of interactive mask is used in this software. In parallel projection camera mode user can clear or revert parts of 3D data with circle tool appearing to be a cilinder looking at user in 3D space. The mask is global but mask edinting is done in selected box which also crops the geometry. This alows for accurate wiping out of areas that are not needed leaving only the area of interest.
+
+Tracking orangs using isosurface is not an easy task. Some boundaries are stiff while some are not. Hydrogen atom responce also is not uniform across organ so isosurface level might need some smooth corrections. Such a correction is trick thing and effectivelly modies input data but it is anyway needed to extract proper boundaries. To do that piecewise linear fucntions for correction along x, y and z coordinates were introduced. Correction factors are added to base level.
+
+
+================Dependencies/Platforms/Requirements===========
+dicom2stl depends on Insight Toolkit (ITK) v 5.2.1 by Kitware and dear-imgui.
+
+To build dicom2stl a certaing tweaks with Makefile are necessary.
+First obtain and build ITK v 5.2.1 build and install it (lokally if you wish)
+Download dear-imgui no install or build is necessary.
+Set pathes in make file and just do make. BASE_PATH is a convenience variable if you have ITK and imgui in the same folder (e.g. in ${HOME}, in that case you can also use ./update_and_rebuild convenience script).
+Otherwise rewrite the head of Makefile to fullfill dependencies requirements.
+
+dicom2stl can be easily built for Linux, and also for Windows (hope there should be also no problems with Mac OS)
+On Windows you also need GLEW, while glfw can be used from dear-imgui or build your own verision of glfw3. There is no sln file for Windows, so just create empty project add existing source files there and set include and library pathes. Add ALL ITK static libraries to library list, glfw3, glew, opengl.
+
+dicom2stl does not require any special hardware and uses regular OpenGL3 with shaders v150.
+
+==================Q&A===================================
+
+---Is it a thin ITK wrapper?
+No it is not ITK wrapper. ITK is used only to read DICOM data to std::vector<float> all other stuff is done from scratch.
+
+---Why not to use Paraview?
+Paraview is nuce and has lots of filters but this small tool seems to be more convenient for certain tasks.
+It is on par or faster than Paraview.
+
+---Is it a super fast SSE based masterpiece and that is the reason I should use it?
+No it is not. It is a convenience developer tool utilizing OpenMP, not more than that.
