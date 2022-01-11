@@ -26,7 +26,7 @@ bool imgui_interface::init() {
   // Create window with graphics context
   window = glfwCreateWindow(1024, 768, "dicom2stl", NULL, NULL);
   if (window == NULL) {
-    std::cerr << "interface::init: ERROR: failed to create glfe window\n";
+    std::cerr << "interface::init: ERROR: failed to create glfw window\n";
     return false;
   }
   glfwMakeContextCurrent(window);
