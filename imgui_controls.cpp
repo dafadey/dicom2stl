@@ -66,7 +66,7 @@ namespace ImGui {
       remake_surface = true;
     }
 
-    remake_surface |= SliderFloat("level", &(obj->level),0,1700);
+    remake_surface |= SliderFloat("level", &(obj->level), obj->source->min, obj->source->max);
 
     if(obj->cropped) {
       auto& cs = *(obj->cropped);

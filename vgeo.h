@@ -12,8 +12,10 @@ std::ostream& operator<<(std::ostream& o, const vec3f& v);
 std::ostream& operator<<(std::ostream& o, const ivec& v);
 
 struct vgeo : public std::vector<float> {
+  vgeo() = delete;
   vgeo(int i, int j, int k);
-   
+  float min;
+  float max;
   const ivec dim;
   const int dim10;
   vec3f d{ 1.f,1.f,1.f };

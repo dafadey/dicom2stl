@@ -101,7 +101,7 @@ void object::make_surface(renderer* ren) {
       }
     }
   }
-
+  
   surface_nomask = new geo(vgeo2surface(*cropped, level, level, &level_vg));
   //surface = new geo(vgeo2surface(*cropped, level, level, &level_vg, mask_cropped));
   if(first_time) {

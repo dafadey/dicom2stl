@@ -91,8 +91,12 @@ bool DICOMreader::read(std::vector<vgeo>& vgs) {
       vg.o[i] = .5f * vg.d[i] * static_cast<float>(vg.dim[i]);
     for (int k = 0; k < nz; k++) {
       for (int j = 0; j < ny; j++) {
-        for (int i = 0; i < nx; i++)
-          vg[i+j*vg.dim[0]+k*vg.dim10] = static_cast<float>(img->GetPixel({ i,j,k }));
+        for (int i = 0; i < nx; i++) {
+          float v = static_cast<float>(img->GetPixel({ i,j,k }));
+          vg[i+j*vg.dim[0]+k*vg.dim10] = v;
+          vg.min = vg.min < v ? vg.min : v;
+          vg.max = vg.max > v ? vg.max : v;
+        }
       }
     }
   }

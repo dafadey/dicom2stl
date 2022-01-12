@@ -9,7 +9,7 @@
 
 #include "base64/base64.h"
 
-vgeo::vgeo(int i, int j, int k) : dim(ivec{i,j,k}), dim10(i*j) {
+vgeo::vgeo(int i, int j, int k) : dim(ivec{i,j,k}), dim10(i*j), min(std::numeric_limits<float>::max()), max(-std::numeric_limits<float>::max()) {
   resize(i*j*k);
 }
   

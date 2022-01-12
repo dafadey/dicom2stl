@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
   vec3f box_scale{ 1., 1., 1. };
   float level{std::numeric_limits<float>::max()};
   float smoothness{1.7};
+  std::array<func,3> levels;
 
   bool err{false};
 
@@ -81,18 +82,16 @@ int main(int argc, char* argv[]) {
     }
   } else
     err=true;
-  if(level == std::numeric_limits<float>::max() && input_ini.empty())
-    err = true;
 
   if(folder.empty() && input_ini.empty())
     err = true;
 
   if (err) {
-    std::cout << "--dicom <path folder to folder containing DICOM data>\n--series <series name>\n--box <center_x center_y center_z scale_x scale_y scale_z>\n\texample: --box -11 13 17 0.5 0.6 0.7\n\tfull box: --box 0 0 0 1 1 1\n--level <level in center>\n--smooth <smoothness factor>\n\talternativelly set --ini <ini file> to load configuration";
+    std::cout << "--dicom <path folder to folder containing DICOM data>\n--series <series name>\n--box <center_x center_y center_z scale_x scale_y scale_z>\n\texample: --box -11 13 17 0.5 0.6 0.7\n\tfull box: --box 0 0 0 1 1 1\n--level <level in center>\n--smooth <smoothness factor>\n\talternativelly set --ini <ini file> to load configuration\n";
     return 0;
   }
 
-  std::cout << "DICOM folder: " << folder << "\nSeries name: " << series << "\nbox: (" << box_center[0] << ", " << box_center[1] << ", " << box_center[2] << ") scale: (" << box_scale[0] << ", " << box_scale[1] << ", " << box_scale[2] << ")\n";
+  std::cout << "DICOM folder: " << folder << "\nSeries name: " << series << "\nbox: (" << box_center[0] << ", " << box_center[1] << ", " << box_center[2] << ") scale: (" << box_scale[0] << ", " << box_scale[1] << ", " << box_scale[2] << ") level=" << level << '\n';
 
   std::vector<vgeo> vgs;
 
@@ -137,7 +136,7 @@ int main(int argc, char* argv[]) {
       obj->source_name = folder;
       obj->box_center = box_center;
       obj->box_scale = box_scale;
-      obj->level=level;
+      obj->level = level == std::numeric_limits<float>::max() ? .5f * (vg.max + vg.min) : level;
       obj->smooth_factor = smoothness;
       objects.push_back(obj);
     }
@@ -175,6 +174,11 @@ int main(int argc, char* argv[]) {
           if(obj->name == name)
             available = false;
         }
+        if(objects.size()) {
+          box_center = objects.back()->box_center;
+          box_scale = objects.back()->box_scale;
+          level = objects.back()->level;
+        }
         if(available) {
           object* obj = new object(&vg);
           obj->name = name;
@@ -183,6 +187,12 @@ int main(int argc, char* argv[]) {
           obj->box_center = box_center;
           obj->box_scale = box_scale;
           obj->level = level;
+          if(objects.size())
+            obj->levels = objects.back()->levels;
+          else {
+            if(levels[0].size() >= 2 && levels[1].size() >= 2 && levels[2].size() >= 2)
+              obj->levels = levels;
+          }
           objects.push_back(obj);
           obj->smooth_surface();
           obj->crop_surface();
@@ -199,6 +209,13 @@ int main(int argc, char* argv[]) {
             obj_to_remove = obj;
           ImGui::TreePop();
         }
+      }
+      
+      if(objects.size() == 1 && obj_to_remove) {
+        box_center = obj_to_remove->box_center;
+        box_scale = obj_to_remove->box_scale;
+        level = obj_to_remove->level;
+        levels = obj_to_remove->levels; 
       }
       
       for(int i=0;i<objects.size();i++) {
